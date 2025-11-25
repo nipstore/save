@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Daftar Tabungan</title>
+
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#6e4aff">
+
+<style>
+
+    /* ==========================
+       THEME SYSTEM (semua tema)
+       ========================== */
+
+    :root[data-theme="ungu"] {
+        --bg1: #6e4aff;
+        --bg2: #9f7bff;
+        --card: rgba(255,255,255,0.18);
+        --card-border: rgba(255,255,255,0.35);
+        --btn-bg: rgba(255,255,255,0.25);
+    }
+
+    :root[data-theme="biru"] {
+        --bg1: #3f78ff;
+        --bg2: #6ba6ff;
+        --card: rgba(255,255,255,0.18);
+        --card-border: rgba(255,255,255,0.45);
+        --btn-bg: rgba(255,255,255,0.25);
+    }
+
+    :root[data-theme="pink"] {
+        --bg1: #ff5ab9;
+        --bg2: #ff88d8;
+        --card: rgba(255,255,255,0.22);
+        --card-border: rgba(255,255,255,0.45);
+        --btn-bg: rgba(255,255,255,0.28);
+    }
+
+    :root[data-theme="hijau"] {
+        --bg1: #00c97b;
+        --bg2: #4dffba;
+        --card: rgba(255,255,255,0.2);
+        --card-border: rgba(255,255,255,0.4);
+        --btn-bg: rgba(255,255,255,0.25);
+    }
+
+    :root[data-theme="hitam"] {
+        --bg1: #111;
+        --bg2: #333;
+        --card: rgba(255,255,255,0.08);
+        --card-border: rgba(255,255,255,0.15);
+        --btn-bg: rgba(255,255,255,0.12);
+    }
+
+    :root[data-theme="gold"] {
+        --bg1: #f5c045;
+        --bg2: #ffdf80;
+        --card: rgba(255,255,255,0.22);
+        --card-border: rgba(255,255,255,0.45);
+        --btn-bg: rgba(255,255,255,0.22);
+    }
+
+    :root[data-theme="galaxy"] {
+        --bg1: #12003b;
+        --bg2: #6a00ff;
+        --card: rgba(255,255,255,0.18);
+        --card-border: rgba(255,255,255,0.32);
+        --btn-bg: rgba(255,255,255,0.25);
+    }
+
+    /* ==========================
+       STYLE UTAMA
+       ========================== */
+
+    body {
+        margin: 0;
+        font-family: Poppins, sans-serif;
+        background: linear-gradient(135deg, var(--bg1), var(--bg2));
+        color: white;
+        backdrop-filter: blur(20px);
+        min-height: 100vh;
+    }
+
+    .container { width: 92%; max-width: 550px; margin: 20px auto; }
+    h1 { font-size: 34px; font-weight: 800; margin-bottom: 5px; }
+
+    .top-buttons { display: flex; justify-content: flex-end; gap: 8px; margin-top: -40px; }
+
+    .btn {
+        padding: 10px 20px;
+        background: var(--btn-bg);
+        border-radius: 14px;
+        border: 1px solid var(--card-border);
+        color: white;
+        backdrop-filter: blur(12px);
+        cursor: pointer;
+        transition: .2s;
+    }
+
+    .btn:hover { background: rgba(255,255,255,0.35); }
+
+    select.themeSelect {
+        padding: 8px 15px;
+        border-radius: 12px;
+        border: 1px solid var(--card-border);
+        background: var(--btn-bg);
+        color: white;
+        backdrop-filter: blur(12px);
+        cursor: pointer;
+        margin-top: -2px;
+    }
+
+    .search {
+        width: 100%; padding: 10px; border-radius: 14px; border: none;
+        margin: 20px 0; background: rgba(255,255,255,0.35);
+        color: white; backdrop-filter: blur(12px);
+    }
+
+    #totalSaldo {
+        font-size:18px; font-weight:700; margin:10px 0;
+        background: var(--btn-bg);
+        padding:12px; border-radius:14px;
+        backdrop-filter:blur(10px);
+    }
+
+    .card {
+        background: var(--card);
+        padding: 18px; border-radius: 20px;
+        margin: 15px 0;
+        border: 1px solid var(--card-border);
+        display: flex; justify-content: space-between;
+        backdrop-filter: blur(14px);
+    }
+
+    .name { font-size: 20px; font-weight: bold; }
+
+    .edit-input {
+        width: 120px; padding: 5px;
+        border-radius: 6px; border: none;
+        background: rgba(255,255,255,0.5);
+        backdrop-filter: blur(10px); margin: 4px 0;
+    }
+
+    .add-btn {
+        width: 100%; padding: 14px; margin-top: 10px;
+        background: var(--btn-bg); color: white;
+        border-radius: 14px; border: none;
+        cursor: pointer; display: none;
+    }
+
+    .del { color: #ff4d7b; cursor: pointer; font-weight: bold; margin-top: 8px; }
+
+    .popup {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        display: none; justify-content: center; align-items: center;
+        backdrop-filter: blur(10px);
+    }
+
+    .popup-box {
+        background: rgba(255,255,255,0.9);
+        color: black; padding: 25px;
+        border-radius: 14px;
+        width: 80%; max-width: 300px;
+        text-align: center;
+    }
+
+    .popup-box input {
+        width: 95%; padding: 10px;
+        border-radius: 8px; border: 1px solid #aaa;
+        margin-top: 10px;
+    }
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>DAFTAR<br>TABUNGAN</h1>
+
+    <div class="top-buttons">
+        <!-- Select Tema -->
+        <select onchange="gantiTema(this.value)" class="themeSelect">
+            <option value="ungu">Ungu</option>
+            <option value="biru">Biru</option>
+            <option value="pink">Pink</option>
+            <option value="hijau">Hijau</option>
+            <option value="hitam">Hitam</option>
+            <option value="gold">Gold</option>
+            <option value="galaxy">Galaxy</option>
+        </select>
+
+        <button class="btn" onclick="openEditLock()">edit</button>
+    </div>
+
+    <input type="text" id="search" class="search" placeholder="Cari..." oninput="filterData()">
+
+    <div id="totalSaldo">TOTAL SALDO : Rp 0</div>
+
+    <div id="list"></div>
+
+    <button id="addBtn" class="add-btn" onclick="addData()">+ Tambah Tabungan</button>
+</div>
+
+<!-- POPUP PASSWORD EDIT -->
+<div class="popup" id="popupEdit">
+    <div class="popup-box">
+        <h3>Masukkan Password Edit</h3>
+        <input type="password" id="editPass" placeholder="Password edit...">
+        <button class="btn" style="width:100%; margin-top:12px" onclick="checkEditPass()">Masuk</button>
+    </div>
+</div>
+
+<script>
+
+/* ==========================================
+   THEME SYSTEM — Simpan tema ke localStorage
+   ========================================== */
+
+function loadTema() {
+    let t = localStorage.getItem("tema") || "ungu";
+    document.documentElement.setAttribute("data-theme", t);
+    document.querySelector(".themeSelect").value = t;
+}
+
+function gantiTema(t) {
+    document.documentElement.setAttribute("data-theme", t);
+    localStorage.setItem("tema", t);
+}
+
+/* ==========================================
+   FITUR TABUNGAN (fungsi asli)
+   ========================================== */
+
+let data = JSON.parse(localStorage.getItem("tabungan")) || [];
+
+function save() {
+    localStorage.setItem("tabungan", JSON.stringify(data));
+}
+
+const EDIT_PASSWORD = "12345";
+let editMode = false;
+
+function openEditLock() {
+    popupEdit.style.display = "flex";
+}
+
+function checkEditPass() {
+    if (editPass.value === EDIT_PASSWORD) {
+        editMode = !editMode;
+        popupEdit.style.display = "none";
+        render();
+    } else alert("Password salah!");
+}
+
+function hitungTotal(list = data) {
+    let total = 0;
+    list.forEach(d => {
+        total += parseInt(d.saldo.replace(/\D/g, "")) || 0;
+    });
+
+    totalSaldo.innerText = "TOTAL SALDO : Rp " + total.toLocaleString("id-ID");
+}
+
+function render(list = data) {
+    let html = "";
+
+    list.forEach((d, i) => {
+        if (!editMode) {
+            html += `
+            <div class="card">
+                <div>
+                    <div class="name">${d.nama}</div>
+                    <div>${d.user}</div>
+                </div>
+                <div style="text-align:right;">
+                    saldo : <b>Rp ${d.saldo}</b><br>
+                    DANA : <b>${d.dana}</b>
+                </div>
+            </div>`;
+        } else {
+            html += `
+            <div class="card">
+                <div>
+                    <input class="edit-input" value="${d.nama}" onchange="edit(${i}, 'nama', this.value)">
+                    <input class="edit-input" value="${d.user}" onchange="edit(${i}, 'user', this.value)">
+                    <div class="del" onclick="del(${i})">Hapus</div>
+                </div>
+                <div style="text-align:right;">
+                    <input class="edit-input" value="${d.saldo}" onchange="edit(${i}, 'saldo', this.value)">
+                    <input class="edit-input" value="${d.dana}" onchange="edit(${i}, 'dana', this.value)">
+                </div>
+            </div>`;
+        }
+    });
+
+    listContainer = document.getElementById("list").innerHTML = html;
+
+    addBtn.style.display = editMode ? "block" : "none";
+
+    save();
+    hitungTotal();
+}
+
+function edit(i, key, v) { data[i][key] = v; render(); }
+function del(i) { if (confirm("Hapus?")) { data.splice(i,1); render(); } }
+function addData() { data.push({nama:"Baru", user:"@baru", saldo:"0", dana:"0000"}); render(); }
+
+function filterData() {
+    let q = search.value.toLowerCase();
+    let filtered = data.filter(d =>
+        d.nama.toLowerCase().includes(q) ||
+        d.user.toLowerCase().includes(q) ||
+        d.saldo.toLowerCase().includes(q) ||
+        d.dana.toLowerCase().includes(q)
+    );
+    render(filtered);
+}
+
+/* INIT */
+loadTema();
+render();
+
+/* SERVICE WORKER */
+if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("service-worker.js");
+}
+
+</script>
+
+</body>
+</html>
